@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Information System</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <div class="brand-wrapper">
+                <div class="brand-monogram">PIS</div>
+                <div class="brand-title">Product Information System</div>
+            </div>
+            <div class="header-meta">
+                <span class="tag-badge">Pertemuan 2 (Slide 17)</span>
+                <span class="tag-badge">PHP Native</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-wrapper">
+        <div class="container">
+            <div class="page-lead">
+                <h1>Dasbor Manajemen Komoditas Produk</h1>
+                <p>Implementasi pemisahan Data Layer, Processing Layer, dan Presentation Layer sesuai spesifikasi silabus.</p>
+            </div>
+
+            <!-- Stats Grid -->
+            <section class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">Total Nilai Aset Gudang</div>
+                    <div class="stat-value">Rp 187.759.000</div>
+                    <div class="stat-hint">Akumulasi seluruh unit fisik</div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-label">Ragam Komoditas</div>
+                    <div class="stat-value">10 <span style="font-size:13px; font-weight:500; color:var(--text-muted)">SKU</span></div>
+                    <div class="stat-hint">7 kategori terdaftar</div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-label">Total Unit Fisik</div>
+                    <div class="stat-value">56 <span style="font-size:13px; font-weight:500; color:var(--text-muted)">Unit</span></div>
+                    <div class="stat-hint">Jumlah stok komoditas di gudang</div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-label">Stok Kritis (&lt; 3)</div>
+                    <div class="stat-value is-alert">
+                        4 <span style="font-size:13px; font-weight:500; color:var(--text-muted)">Item</span>
+                    </div>
+                    <div class="stat-hint">Perlu tindakan pengadaan ulang</div>
+                </div>
+            </section>
+
+            <!-- Notice box -->
+            <div class="notice-box">
+                <div class="notice-text">
+                    <strong>Perhatian:</strong>
+                    <span>Ditemukan 4 komoditas dengan kuantitas stok di bawah ambang batas (&lt; 3 unit). Baris ditandai dengan aksen merah pada tabel.</span>
+                </div>
+            </div>
+
+            <!-- Table Card -->
+            <section class="data-card">
+                <div class="toolbar">
+                    <div class="toolbar-controls">
+                        <div class="segmented-control" role="tablist">
+                            <button type="button" class="segment-btn active" id="tabAll" onclick="setFilter('all')">
+                                Semua Produk (10)
+                            </button>
+                            <button type="button" class="segment-btn" id="tabCritical" onclick="setFilter('critical')">
+                                Stok Kritis (4)
+                            </button>
+                        </div>
+
+                        <input type="text" id="tableSearch" class="search-field" placeholder="Cari nama, ID, atau kategori..." onkeyup="handleSearch()">
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="product-table" id="inventoryTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 48px;">No</th>
+                                <th style="width: 90px;">ID</th>
+                                <th>Komoditas &amp; Spesifikasi</th>
+                                <th style="width: 160px;">Kategori</th>
+                                <th style="width: 130px; text-align: right;">Harga Satuan</th>
+                                <th style="width: 100px; text-align: center;">Kuantitas</th>
+                                <th style="width: 120px; text-align: center;">Status</th>
+                                <th style="width: 140px; text-align: right;">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 1 -->
+                            <tr class="row-warning" data-critical="false">
+                                <td>1</td>
+                                <td><span class="col-id">PRD-001</span></td>
+                                <td>
+                                    <div class="item-info">
+                                        <span class="item-name">Laptop Asus ZenBook 14 OLED</span>
+                                        <span class="item-desc">Laptop ultra-thin dengan layar 2.8K 90Hz OLED, Intel Core Ultra 7, dan baterai tahan 15 jam.</span>
+                                    </div>
+                                </td>
+                                <td><span class="category-pill">Komputer &amp; Laptop</span></td>
+                                <td class="num-cell">Rp 18.500.000</td>
+                                <td class="qty-cell">4</td>
+                                <td style="text-align: center;">
+                                    <span class="status-badge badge-warning">Menipis (3-7)</span>
+                                </td>
+                                <td class="num-cell" style="font-weight: 600;">Rp 74.000.000</td>
+                            </tr>
+
+                            <!-- 2 (Kritis) -->
+                            <tr class="row-critical" data-critical="true">
+                                <td>2</td>
+                                <td><span class="col-id">PRD-002</span></td>
+                                <td>
+                                    <div class="item-info">
+                                        <span class="item-name">Mouse Wireless Logitech MX Master 3S</span>
+                                        <span class="item-desc">Mouse ergonomis presisi tinggi dengan sensor 8000 DPI Quiet Clicks dan scrolling MagSpeed.</span>
+                                    </div>
+                                </td>
+                                <td><span class="category-pill">Aksesoris PC</span></td>
+                                <td class="num-cell">Rp 1.499.000</td>
+                                <td class="qty-cell is-critical">1</td>
+                                <td style="text-align: center;">
+                                    <span class="status-badge badge-danger">Kritis (&lt; 3)</span>
+                                </td>
+                                <td class="num-cell" style="font-weight: 600;">Rp 1.499.000</td>
+                            </tr>
+
+                            <!-- 3 -->
+                            <tr class="row-normal" data-critical="false">
+                                <td>3</td>
+                                <td><span class="col-id">PRD-003</span></td>
+                                <td>
+                                    <div class="item-info">
+                                        <span class="item-name">Keyboard Mekanikal Keychron K2 V2</span>
+                                        <span class="item-desc">Keyboard wireless mechanical 75% layout dengan Gateron G Pro Switch dan RGB backlight.</span>
+                                    </div>
+                                </td>
+                                <td><span class="category-pill">Aksesoris PC</span></td>
+                                <td class="num-cell">Rp 1.250.000</td>
+                                <td class="qty-cell">8</td>
+                                <td style="text-align: center;">
+                                    <span class="status-badge badge-success">Aman (&gt; 7)</span>
+                                </td>
+                                <td class="num-cell" style="font-weight: 600;">Rp 10.000.000</td>
+                            </tr>
+
+                            <!-- 4 (Kritis) -->
+                            <tr class="row-critical" data-critical="true">
+                                <td>4</td>
+                                <td><span class="col-id">PRD-004</span></td>
+                                <td>
+                                    <div class="item-info">
+                                        <span class="item-name">Monitor Dell UltraSharp 27" 4K (U2723QE)</span>
+                                        <span class="item-desc">Monitor profesional IPS Black technology dengan 100% sRGB, 98% DCI-P3, dan koneksi USB-C Hub 90W.</span>
+                                    </div>
+                                </td>
+                                <td><span class="category-pill">Monitor &amp; Display</span></td>
+                                <td class="num-cell">Rp 8.750.000</td>
+                                <td class="qty-cell is-critical">2</td>
+                                <td style="text-align: center;">
+                                    <span class="status-badge badge-danger">Kritis (&lt; 3)</span>
+                                </td>
+                                <td class="num-cell" style="font-weight: 600;">Rp 17.500.000</td>
+                            </tr>
+
+                            <!-- 5 -->
+                            <tr class="row-warning" data-critical="false">
+                                <td>5</td>
+                                <td><span class="col-id">PRD-005</span></td>
+                                <td>
+                                    <div class="item-info">
+                                        <span class="item-name">Headphone ANC Sony WH-1000XM5</span>
+                                        <span class="item-desc">Headphone premium peredam bising terbaik dengan dua prosesor V1/QN1 dan 8 mikrofon beamforming.</span>
+                                    </div>
+                                </td>
+                                <td><span class="category-pill">Audio &amp; Hiburan</span></td>
+                                <td class="num-cell">Rp 4.499.000</td>
+                                <td class="qty-cell">5</td>
+                                <td style="text-align: center;">
+                                    <span class="status-badge badge-warning">Menipis (3-7)</span>
+                                </td>
+                                <td class="num-cell" style="font-weight: 600;">Rp 22.495.000</td>
+                            </tr>
+
+                            <!-- 6 -->
+                            <tr class="row-normal" data-critical="false">
+                                <td>6</td>
+                                <td><span class="col-id">PRD-006</span></td>
+                                <td>
+                                    <div class="item-info">
+                                        <span class="item-name">SSD Eksternal Samsung T7 Shield 1TB</span>
+                                        <span class="item-desc">Portable NVMe SSD berkecepatan transfer hingga 1050 MB/s dengan proteksi tahan air &amp; debu IP65.</span>
+                                    </div>
+                                </td>
+                                <td><span class="category-pill">Penyimpanan Data</span></td>
+                                <td class="num-cell">Rp 1.890.000</td>
+                                <td class="qty-cell">12</td>
+                                <td style="text-align: center;">
+                                    <span class="status-badge badge-success">Aman (&gt; 7)</span>
+                                </td>
+                                <td class="num-cell" style="font-weight: 600;">Rp 22.680.000</td>
+                            </tr>
+
+                            <!-- 7 (Kritis) -->
+                            <tr class="row-critical" data-critical="true">
+                                <td>7</td>
+                                <td><span class="col-id">PRD-007</span></td>
+                                <td>
+                                    <div class="item-info">
+                                        <span class="item-name">Webcam Logitech Brio 4K Pro</span>
+                                        <span class="item-desc">Webcam ultra HD 4K dengan sensor HDR RightLight 3 dan dukungan otentikasi Windows Hello wajah.</span>
+                                    </div>
+                                </td>
+                                <td><span class="category-pill">Aksesoris PC</span></td>
+                                <td class="num-cell">Rp 2.650.000</td>
+                                <td class="qty-cell is-critical">2</td>
+                                <td style="text-align: center;">
+                                    <span class="status-badge badge-danger">Kritis (&lt; 3)</span>
+                                </td>
+                                <td class="num-cell" style="font-weight: 600;">Rp 5.300.000</td>
+                            </tr>
+
+                            <!-- 8 -->
+                            <tr class="row-warning" data-critical="false">
+                                <td>8</td>
+                                <td><span class="col-id">PRD-008</span></td>
+                                <td>
+                                    <div class="item-info">
+                                        <span class="item-name">Kursi Ergonomis ErgoPlus Elite Pro</span>
+                                        <span class="item-desc">Kursi kerja ergonomis dengan penopang lumbal adaptif 3D, sandaran kepala dinamis, dan jaring mesh breathable.</span>
+                                    </div>
+                                </td>
+                                <td><span class="category-pill">Perabot Kantor</span></td>
+                                <td class="num-cell">Rp 3.400.000</td>
+                                <td class="qty-cell">7</td>
+                                <td style="text-align: center;">
+                                    <span class="status-badge badge-warning">Menipis (3-7)</span>
+                                </td>
+                                <td class="num-cell" style="font-weight: 600;">Rp 23.800.000</td>
+                            </tr>
+
+                            <!-- 9 (Habis / Kritis) -->
+                            <tr class="row-critical" data-critical="true">
+                                <td>9</td>
+                                <td><span class="col-id">PRD-009</span></td>
+                                <td>
+                                    <div class="item-info">
+                                        <span class="item-name">Docking Station Anker PowerExpand 13-in-1</span>
+                                        <span class="item-desc">USB-C Docking Station multi-port dengan dual HDMI, DisplayPort, Ethernet Gigabit, dan pengisian daya 85W.</span>
+                                    </div>
+                                </td>
+                                <td><span class="category-pill">Aksesoris PC</span></td>
+                                <td class="num-cell">Rp 2.100.000</td>
+                                <td class="qty-cell is-critical">0</td>
+                                <td style="text-align: center;">
+                                    <span class="status-badge badge-danger">Habis (0)</span>
+                                </td>
+                                <td class="num-cell" style="font-weight: 600;">Rp 0</td>
+                            </tr>
+
+                            <!-- 10 -->
+                            <tr class="row-normal" data-critical="false">
+                                <td>10</td>
+                                <td><span class="col-id">PRD-010</span></td>
+                                <td>
+                                    <div class="item-info">
+                                        <span class="item-name">Smart LED Desk Lamp Xiaomi Pro</span>
+                                        <span class="item-desc">Lampu meja pintar fleksibel dengan pengaturan suhu warna luas (2700K - 4800K) dan sertifikasi bebas flicker.</span>
+                                    </div>
+                                </td>
+                                <td><span class="category-pill">Pencahayaan &amp; Aksesoris</span></td>
+                                <td class="num-cell">Rp 699.000</td>
+                                <td class="qty-cell">15</td>
+                                <td style="text-align: center;">
+                                    <span class="status-badge badge-success">Aman (&gt; 7)</span>
+                                </td>
+                                <td class="num-cell" style="font-weight: 600;">Rp 10.485.000</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="5" style="text-align: right; color: var(--text-muted);">
+                                    Total Akumulasi Nilai Aset Gudang:
+                                </td>
+                                <td style="text-align: center;">
+                                    56 unit
+                                </td>
+                                <td></td>
+                                <td class="num-cell" style="font-weight: 700;">
+                                    Rp 187.759.000
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Architecture Strip -->
+            <div class="arch-strip">
+                <span class="arch-strip-title">Struktur Arsitektur 3-Layer:</span>
+                <div class="arch-strip-items">
+                    <span class="arch-strip-item">Data Layer: <code>products.php</code></span>
+                    <span class="arch-strip-item">Processing Layer: <code>functions.php</code></span>
+                    <span class="arch-strip-item">Presentation Layer: <code>index.php</code></span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <div>
+                <strong>Product Information System</strong> &bull; Praktikum Pemrograman Web (Pertemuan 2, Slide 17)
+            </div>
+            <div>
+                Pengembang: <strong>Adinda Riskiani</strong> &bull;
+                <a href="https://github.com/dndrskni22/ProjectProductInformationSystem" target="_blank" rel="noopener">GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentFilter = 'all';
+
+        function setFilter(mode) {
+            currentFilter = mode;
+            document.getElementById('tabAll').classList.toggle('active', mode === 'all');
+            document.getElementById('tabCritical').classList.toggle('active', mode === 'critical');
+            applyFilters();
+        }
+
+        function handleSearch() {
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const query = document.getElementById('tableSearch').value.toLowerCase();
+            const table = document.getElementById('inventoryTable');
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const text = row.innerText.toLowerCase();
+                const isCritical = row.getAttribute('data-critical') === 'true';
+
+                const matchesFilter = (currentFilter === 'all') || (currentFilter === 'critical' && isCritical);
+                const matchesQuery = text.includes(query);
+
+                row.style.display = (matchesFilter && matchesQuery) ? '' : 'none';
+            }
+        }
+    </script>
+</body>
+</html>
