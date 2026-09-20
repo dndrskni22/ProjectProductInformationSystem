@@ -1,0 +1,15 @@
+# Environment & IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+BLUEPRINT.md
+# OS Temporary Files
+desktop.ini
+$RECYCLE.BIN/
+
+# Local PHP Server logs
+*.log
